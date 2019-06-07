@@ -41,7 +41,7 @@ public class DHE {
     }
 
     private void generatePrivateKey() {
-        BigInteger upperLimit = r.subtract(BigInteger.ONE);
+        BigInteger upperLimit = r.subtract(BigInteger.ONE); // a, b should be in {2, 3, ..., #Ep-1} (#Ep=r)
         this.privateKey = generateRandomNumber(upperLimit);
     }
 
@@ -56,7 +56,7 @@ public class DHE {
         BigInteger randomNumber;
         do {
             randomNumber = new BigInteger(upperLimit.bitLength(), randomSource);
-        } while (randomNumber.compareTo(upperLimit) >= 0); // continue until randomNumber is smaller than r
+        } while (randomNumber.compareTo(upperLimit) >= 0); // continue until randomNumber is smaller than upperLimit
 
         return randomNumber;
     }

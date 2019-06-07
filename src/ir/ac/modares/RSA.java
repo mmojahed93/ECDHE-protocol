@@ -19,7 +19,7 @@ public class RSA {
 
         long mills2 = System.currentTimeMillis();
         long timeDuration = (mills2 - mills1);
-        System.out.println("[RSA] Time duration in: " + timeDuration + "'ms " + (timeDuration / 1000) + "'s");
+        System.out.println("[RSA] Time duration: " + timeDuration + "'ms " + (timeDuration / 1000) + "'s");
 
     }
 

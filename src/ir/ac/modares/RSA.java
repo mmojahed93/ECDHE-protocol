@@ -9,29 +9,72 @@ import java.util.Random;
 
 public class RSA {
 
-    private BigInteger p;
-    private BigInteger q;
+    private int pqBitLength = 50;
+    private float publicKeyRatio = (float) 0.5;
+
+    private BigInteger privateKey;
+    private BigInteger publicKey;
+    private BigInteger mod;
 
     public RSA() {
+    }
+
+    public RSA(int pqBitLength) {
+        this.pqBitLength = pqBitLength;
+    }
+
+    public RSA(int pqBitLength,float publicKeyRatio) {
+        this.pqBitLength = pqBitLength;
+        this.publicKeyRatio = publicKeyRatio;
+    }
+
+    public BigInteger getPrivateKey() {
+        return privateKey;
+    }
+
+    public BigInteger getPublicKey() {
+        return publicKey;
+    }
+
+    public BigInteger getMod() {
+        return mod;
+    }
+
+    public void computeKeys() {
         long mills1 = System.currentTimeMillis();
-        this.p = findRandomNumber(50);
-        this.q = findRandomNumber(20);
+        BigInteger p = findRandomPrime(pqBitLength);
+        BigInteger q = findRandomPrime(pqBitLength);
+
+        BigInteger n = p.multiply(q);
+        BigInteger phN = p.subtract(BigInteger.ONE).multiply(q.subtract(BigInteger.ONE));
+        BigInteger e = findGcdOne(phN); // Find relatively prime of phN
+        BigInteger d = e.modPow(BigInteger.valueOf(-1), phN);
+
+        this.privateKey = d;
+        this.publicKey = e;
+        this.mod = n;
 
         long mills2 = System.currentTimeMillis();
         long timeDuration = (mills2 - mills1);
-        System.out.println("[RSA] Time duration: " + timeDuration + "'ms " + (timeDuration / 1000) + "'s");
-
+        System.out.println("[RSA] Keys generated in " + timeDuration + "'ms " + (timeDuration / 1000) + "'s");
     }
 
-    public BigInteger getP() {
-        return p;
+    private BigInteger findGcdOne(BigInteger number) {
+        int upperBitLength = (int) (number.bitLength() * this.publicKeyRatio);
+        Random randomSource = new Random();
+        BigInteger randomNumber;
+
+        do {
+            randomNumber = new BigInteger(upperBitLength, randomSource);
+
+        } while (randomNumber.compareTo(number) != -1
+                || randomNumber.compareTo(BigInteger.ONE) != 1
+                || randomNumber.gcd(number).compareTo(BigInteger.ONE) != 0); // continue until gcd = 1 (1 < randomNumber < number)
+
+        return randomNumber;
     }
 
-    public BigInteger getQ() {
-        return q;
-    }
-
-    private BigInteger findRandomNumber(int bitLength) {
+    private BigInteger findRandomPrime(int bitLength) {
         Random randomSource = new Random();
         BigInteger randomNumber;
 

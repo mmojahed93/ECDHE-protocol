@@ -28,8 +28,6 @@ public class DH {
     private Point publicKey;
 
     public DH() {
-        generatePrivateKey();
-        generatePublicKey();
     }
 
     public BigInteger getPrivateKey() {
@@ -38,6 +36,11 @@ public class DH {
 
     public Point getPublicKey() {
         return publicKey;
+    }
+
+    public void generateKeys() {
+        generatePrivateKey();
+        generatePublicKey();
     }
 
     private void generatePrivateKey() {

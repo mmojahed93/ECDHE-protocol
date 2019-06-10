@@ -7,7 +7,7 @@ import java.util.Random;
  * Created by Mohammad Mahdi Mojahed (m.mojahed@modares.ac.ir) on 6/6/19.
  */
 
-public class DH {
+public class EllipticCurveEncryption {
 
 //    int b = 0x64210519e59c80e70fa7e9ab72243049feb8deecc146b9b1;
 //    int gx = 0x188da80eb03090f67cbf20eb43a18800f4ff0afd82ff1012;
@@ -27,7 +27,7 @@ public class DH {
     private BigInteger privateKey;
     private Point publicKey;
 
-    public DH() {
+    public EllipticCurveEncryption() {
     }
 
     public BigInteger getPrivateKey() {

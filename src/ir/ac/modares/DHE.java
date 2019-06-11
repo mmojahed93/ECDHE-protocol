@@ -11,6 +11,10 @@ public class DHE {
     private Point signedECEPublicKey;
     private BigInteger ecePrivateKey;
     private Point ecePublicKey;
+
+    private BigInteger rsaPrivateKey;
+    private RSA.RSAPublicKey rsaPublicKey;
+
     private Point sharedKey;
 
     private Point participantSignedECEPublicKey;
@@ -26,26 +30,44 @@ public class DHE {
         this.participantRSAPublicKey = participantRSAPublicKey;
     }
 
+    public void setParticipantECEPublicKey(Point participantECEPublicKey) {
+        this.participantECEPublicKey = participantECEPublicKey;
+    }
+
     public void setParticipantSignedECPublicKey(Point participantSignedECPublicKey) {
         this.participantSignedECEPublicKey = participantSignedECPublicKey;
     }
 
-    public void setParticipantPublicKey(RSA.RSAPublicKey participantRSAPublicKey) {
+    public void setParticipantRSAPublicKey(RSA.RSAPublicKey participantRSAPublicKey) {
         this.participantRSAPublicKey = participantRSAPublicKey;
     }
 
     public Point getSignedECEPublicKey() {
+        return this.signedECEPublicKey;
+    }
+
+    public Point getEcePublicKey() {
+        return ecePublicKey;
+    }
+
+    public RSA.RSAPublicKey getRsaPublicKey() {
+        return rsaPublicKey;
+    }
+
+    public void generateKeys() {
         EllipticCurveEncryption ellipticCurveEncryption = new EllipticCurveEncryption();
+        ellipticCurveEncryption.generateKeys();
         ecePrivateKey = ellipticCurveEncryption.getPrivateKey();
         ecePublicKey = ellipticCurveEncryption.getPublicKey();
 
         RSA rsa = new RSA();
         rsa.generateKeys();
+        this.rsaPrivateKey = rsa.getPrivateKey();
+        this.rsaPublicKey = rsa.getPublicKey();
+
         BigInteger encryptedX = rsa.sign(ecePublicKey.getX());
         BigInteger encryptedY = rsa.sign(ecePublicKey.getY());
         signedECEPublicKey = new Point(encryptedX, encryptedY);
-
-        return signedECEPublicKey;
     }
 
     public Point getSharedKey() throws Exception {

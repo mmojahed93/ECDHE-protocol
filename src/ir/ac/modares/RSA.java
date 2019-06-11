@@ -7,7 +7,7 @@ import java.util.Random;
  * Created by Mohammad Mahdi Mojahed (m.mojahed@modares.ac.ir) on 6/7/19.
  */
 
-public class RSA {
+public class RSA implements Encryption {
 
     private int pqBitLength = 50;
     private float publicKeyRatio = (float) 0.5;
@@ -23,7 +23,7 @@ public class RSA {
         this.pqBitLength = pqBitLength;
     }
 
-    public RSA(int pqBitLength,float publicKeyRatio) {
+    public RSA(int pqBitLength, float publicKeyRatio) {
         this.pqBitLength = pqBitLength;
         this.publicKeyRatio = publicKeyRatio;
     }
@@ -40,7 +40,8 @@ public class RSA {
         return mod;
     }
 
-    public void computeKeys() {
+    @Override
+    public void generateKeys() {
         long mills1 = System.currentTimeMillis();
         BigInteger p = findRandomPrime(pqBitLength);
         BigInteger q = findRandomPrime(pqBitLength);
@@ -155,5 +156,25 @@ public class RSA {
             half = half.shiftRight(1);
         }
         return half.shiftLeft(1);
+    }
+
+    @Override
+    public BigInteger encryption(BigInteger msg) {
+        return msg.modPow(getPublicKey(), getMod());
+    }
+
+    @Override
+    public BigInteger sign(BigInteger msg) {
+        return msg.modPow(getPrivateKey(), getMod());
+    }
+
+    @Override
+    public BigInteger validateSignature(BigInteger msg) {
+        return msg.modPow(getPublicKey(), getMod());
+    }
+
+    @Override
+    public BigInteger decryption(BigInteger msg) {
+        return msg.modPow(getPrivateKey(), getMod());
     }
 }

@@ -9,7 +9,7 @@ import java.util.Random;
 
 public class RSA implements Encryption {
 
-    private int pqBitLength = 50;
+    private int pqBitLength = 1024;
     private float publicKeyRatio = (float) 0.5;
 
     private BigInteger privateKey;

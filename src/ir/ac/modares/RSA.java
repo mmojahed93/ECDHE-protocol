@@ -90,10 +90,14 @@ public class RSA implements Encryption {
     }
 
     private boolean isPrimeV1(BigInteger number) {
-        return isPrimeV1(number, false);
+        return isPrimeV1(number, 32);
     }
 
-    private boolean isPrimeV1(BigInteger number, boolean completeCheck) {
+    private boolean isPrimeV1(BigInteger number, int certainty) {
+        return isPrimeV1(number, certainty, false);
+    }
+
+    private boolean isPrimeV1(BigInteger number, int certainty, boolean completeCheck) {
         BigInteger two = new BigInteger("2");
 
         // Check 0 and 1
@@ -107,7 +111,7 @@ public class RSA implements Encryption {
         }
 
         // Check via BigInteger.isProbablePrime(certainty), probability of false positive is: (1 - 2^certainty)
-        if (!number.isProbablePrime(completeCheck ? 10 : 32)) {
+        if (!number.isProbablePrime(certainty)) {
             return false;
         }
 

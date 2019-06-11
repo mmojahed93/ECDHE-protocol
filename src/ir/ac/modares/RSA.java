@@ -90,11 +90,10 @@ public class RSA implements Encryption {
     }
 
     private boolean isPrimeV1(BigInteger number) {
-        // Check via BigInteger.isProbablePrime(certainty)
-        if (!number.isProbablePrime(10)) {
-            return false;
-        }
+        return isPrimeV1(number, false);
+    }
 
+    private boolean isPrimeV1(BigInteger number, boolean completeCheck) {
         BigInteger two = new BigInteger("2");
 
         // Check 0 and 1
@@ -107,12 +106,18 @@ public class RSA implements Encryption {
             return false;
         }
 
-        BigInteger three = new BigInteger("3");
+        // Check via BigInteger.isProbablePrime(certainty), probability of false positive is: (1 - 2^certainty)
+        if (!number.isProbablePrime(completeCheck ? 10 : 32)) {
+            return false;
+        }
 
-        // Find divisor if any from 3 to 'number'
-        for (BigInteger i = three; i.multiply(i).compareTo(number) < 1; i = i.add(two)) { // Start from 3, 5, etc. the odd number, and look for a divisor if any
-            if (BigInteger.ZERO.equals(number.mod(i))) { // Check if 'i' is divisor of 'number'
-                return false;
+        if (completeCheck) {
+            BigInteger three = new BigInteger("3");
+            // Find divisor if any from 3 to 'number'
+            for (BigInteger i = three; i.multiply(i).compareTo(number) < 1; i = i.add(two)) { // Start from 3, 5, etc. the odd number, and look for a divisor if any
+                if (BigInteger.ZERO.equals(number.mod(i))) { // Check if 'i' is divisor of 'number'
+                    return false;
+                }
             }
         }
 

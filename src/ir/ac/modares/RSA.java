@@ -1,5 +1,7 @@
 package ir.ac.modares;
 
+import org.apache.commons.codec.digest.DigestUtils;
+
 import java.math.BigInteger;
 import java.util.Random;
 
@@ -168,22 +170,44 @@ public class RSA implements Encryption {
     }
 
     @Override
-    public BigInteger encryption(BigInteger msg) {
-        return msg.modPow(getPublicKey(), getMod());
+    public BigInteger encrypt(BigInteger msg) {
+        BigInteger hashedMessage = hash(msg);
+        return hashedMessage.modPow(getPublicKey(), getMod());
+    }
+
+    @Override
+    public BigInteger decrypt(BigInteger encryptedMsg) {
+        return encryptedMsg.modPow(getPrivateKey(), getMod());
     }
 
     @Override
     public BigInteger sign(BigInteger msg) {
-        return msg.modPow(getPrivateKey(), getMod());
+        BigInteger hashedMessage = hash(msg);
+        return hashedMessage.modPow(getPrivateKey(), getMod());
     }
 
     @Override
-    public BigInteger validateSignature(BigInteger msg) {
-        return msg.modPow(getPublicKey(), getMod());
+    public BigInteger validateSignature(BigInteger encryptedMsg) {
+        return encryptedMsg.modPow(getPublicKey(), getMod());
     }
 
     @Override
-    public BigInteger decryption(BigInteger msg) {
-        return msg.modPow(getPrivateKey(), getMod());
+    public boolean checkEncryption(BigInteger msg, BigInteger encryptedMsg) {
+        BigInteger hashedMessage = hash(msg);
+        BigInteger decryptedMessage = decrypt(encryptedMsg);
+        return hashedMessage.equals(decryptedMessage);
+    }
+
+    @Override
+    public boolean checkSignature(BigInteger msg, BigInteger encryptedMsg) {
+        BigInteger hashedMessage = hash(msg);
+        BigInteger decryptedMessage = validateSignature(encryptedMsg);
+        return hashedMessage.equals(decryptedMessage);
+    }
+
+    @Override
+    public BigInteger hash(BigInteger msg) {
+        byte[] hashMessageByteArr = DigestUtils.sha256(msg.toByteArray());
+        return new BigInteger(hashMessageByteArr);
     }
 }

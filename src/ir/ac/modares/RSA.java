@@ -11,12 +11,29 @@ import java.util.Random;
 
 public class RSA implements Encryption {
 
+    public static class RSAPublicKey {
+        private BigInteger key;
+        private BigInteger mod;
+
+        public RSAPublicKey(BigInteger key, BigInteger mod) {
+            this.key = key;
+            this.mod = mod;
+        }
+
+        public BigInteger getKey() {
+            return key;
+        }
+
+        public BigInteger getMod() {
+            return mod;
+        }
+    }
+
     private int pqBitLength = 1024;
     private float publicKeyRatio = (float) 0.5;
 
     private BigInteger privateKey;
-    private BigInteger publicKey;
-    private BigInteger mod;
+    private RSAPublicKey publicKey;
 
     public RSA() {
     }
@@ -34,24 +51,17 @@ public class RSA implements Encryption {
         this.privateKey = privateKey;
     }
 
-    public void setPublicKey(BigInteger publicKey) {
+    public void setPublicKey(RSAPublicKey publicKey) {
         this.publicKey = publicKey;
     }
 
-    public void setMod(BigInteger mod) {
-        this.mod = mod;
-    }
 
     public BigInteger getPrivateKey() {
         return privateKey;
     }
 
-    public BigInteger getPublicKey() {
+    public RSAPublicKey getPublicKey() {
         return publicKey;
-    }
-
-    public BigInteger getMod() {
-        return mod;
     }
 
     @Override
@@ -66,8 +76,7 @@ public class RSA implements Encryption {
         BigInteger d = e.modPow(BigInteger.valueOf(-1), phN);
 
         this.privateKey = d;
-        this.publicKey = e;
-        this.mod = n;
+        this.publicKey = new RSAPublicKey(e, n);
 
         long mills2 = System.currentTimeMillis();
         long timeDuration = (mills2 - mills1);
@@ -184,23 +193,23 @@ public class RSA implements Encryption {
     @Override
     public BigInteger encrypt(BigInteger msg) {
         BigInteger hashedMessage = hash(msg);
-        return hashedMessage.modPow(getPublicKey(), getMod());
+        return hashedMessage.modPow(publicKey.getKey(), publicKey.getMod());
     }
 
     @Override
     public BigInteger decrypt(BigInteger encryptedMsg) {
-        return encryptedMsg.modPow(getPrivateKey(), getMod());
+        return encryptedMsg.modPow(getPrivateKey(), publicKey.getMod());
     }
 
     @Override
     public BigInteger sign(BigInteger msg) {
         BigInteger hashedMessage = hash(msg);
-        return hashedMessage.modPow(getPrivateKey(), getMod());
+        return hashedMessage.modPow(getPrivateKey(), publicKey.getMod());
     }
 
     @Override
     public BigInteger validateSignature(BigInteger encryptedMsg) {
-        return encryptedMsg.modPow(getPublicKey(), getMod());
+        return encryptedMsg.modPow(publicKey.getKey(), publicKey.getMod());
     }
 
     @Override

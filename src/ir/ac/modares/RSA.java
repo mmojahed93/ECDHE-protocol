@@ -231,6 +231,6 @@ public class RSA implements Encryption {
         // TODO hash algorithm should be implemented? ask from Dr Abadi
         // FIXME pass hash algorithm
         byte[] hashMessageByteArr = DigestUtils.sha256(msg.toByteArray());
-        return new BigInteger(hashMessageByteArr);
+        return new BigInteger(1, hashMessageByteArr);
     }
 }

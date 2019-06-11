@@ -30,6 +30,18 @@ public class RSA implements Encryption {
         this.publicKeyRatio = publicKeyRatio;
     }
 
+    public void setPrivateKey(BigInteger privateKey) {
+        this.privateKey = privateKey;
+    }
+
+    public void setPublicKey(BigInteger publicKey) {
+        this.publicKey = publicKey;
+    }
+
+    public void setMod(BigInteger mod) {
+        this.mod = mod;
+    }
+
     public BigInteger getPrivateKey() {
         return privateKey;
     }

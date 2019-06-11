@@ -9,12 +9,18 @@ public interface Encryption {
 
     void generateKeys();
 
-    BigInteger encryption(BigInteger msg);
+    BigInteger encrypt(BigInteger msg);
+
+    BigInteger decrypt(BigInteger encryptedMsg);
 
     BigInteger sign(BigInteger msg);
 
-    BigInteger validateSignature(BigInteger msg);
+    BigInteger validateSignature(BigInteger encryptedMsg);
 
-    BigInteger decryption(BigInteger msg);
+    boolean checkEncryption(BigInteger msg, BigInteger encryptedMsg);
+
+    boolean checkSignature(BigInteger msg, BigInteger encryptedMsg);
+
+    BigInteger hash(BigInteger msg);
 
 }

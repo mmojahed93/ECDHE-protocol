@@ -8,47 +8,51 @@ import java.math.BigInteger;
  */
 public class DHE {
 
-    private Point signedECEPublicKey;
-    private BigInteger ecePrivateKey;
-    private Point ecePublicKey;
-
     private EllipticCurveEncryption ellipticCurveEncryption;
-    private BigInteger rsaPrivateKey;
+    private EllipticCurveEncryption.PublicParams publicParams;
+    private BigInteger signedPublicParams;
+
+    private BigInteger ecePrivateKey;
+
     private RSA.RSAPublicKey rsaPublicKey;
 
     private Point sharedKey;
 
-    private Point participantSignedECEPublicKey;
-    private Point participantECEPublicKey;
+    private BigInteger participantSignedPublicParams;
+    private EllipticCurveEncryption.PublicParams participantPublicParams;
     private RSA.RSAPublicKey participantRSAPublicKey;
 
     public DHE() {
     }
 
-    public DHE(Point participantSignedECPublicKey, Point participantECEPublicKey, RSA.RSAPublicKey participantRSAPublicKey) {
-        this.participantSignedECEPublicKey = participantSignedECPublicKey;
-        this.participantECEPublicKey = participantECEPublicKey;
+    public DHE(BigInteger participantSignedPublicParams, EllipticCurveEncryption.PublicParams participantPublicParams, RSA.RSAPublicKey participantRSAPublicKey) {
+        this.participantSignedPublicParams = participantSignedPublicParams;
+        this.participantPublicParams = participantPublicParams;
         this.participantRSAPublicKey = participantRSAPublicKey;
     }
 
-    public void setParticipantECEPublicKey(Point participantECEPublicKey) {
-        this.participantECEPublicKey = participantECEPublicKey;
+    public void setParticipantPublicParams(EllipticCurveEncryption.PublicParams participantPublicParams) {
+        this.participantPublicParams = participantPublicParams;
     }
 
-    public void setParticipantSignedECPublicKey(Point participantSignedECPublicKey) {
-        this.participantSignedECEPublicKey = participantSignedECPublicKey;
+    public void setParticipantSignedPublicParams(BigInteger participantSignedPublicParams) {
+        this.participantSignedPublicParams = participantSignedPublicParams;
     }
 
     public void setParticipantRSAPublicKey(RSA.RSAPublicKey participantRSAPublicKey) {
         this.participantRSAPublicKey = participantRSAPublicKey;
     }
 
-    public Point getSignedECEPublicKey() {
-        return this.signedECEPublicKey;
+    public EllipticCurveEncryption.PublicParams getPublicParams() {
+        return publicParams;
     }
 
-    public Point getEcePublicKey() {
-        return ecePublicKey;
+    public BigInteger getSignedPublicParams() {
+        return this.signedPublicParams;
+    }
+
+    public Point getSharedKey() {
+        return sharedKey;
     }
 
     public RSA.RSAPublicKey getRsaPublicKey() {
@@ -56,37 +60,32 @@ public class DHE {
     }
 
     public void generateKeys() {
-        ellipticCurveEncryption = new EllipticCurveEncryption();
+        this.ellipticCurveEncryption = new EllipticCurveEncryption();
         ellipticCurveEncryption.generateKeys();
+        this.publicParams = ellipticCurveEncryption.getPublicParams();
+
         ecePrivateKey = ellipticCurveEncryption.getPrivateKey();
-        ecePublicKey = ellipticCurveEncryption.getPublicKey();
 
         RSA rsa = new RSA();
         rsa.generateKeys();
-        this.rsaPrivateKey = rsa.getPrivateKey();
         this.rsaPublicKey = rsa.getPublicKey();
 
-        BigInteger encryptedX = rsa.sign(ecePublicKey.getX());
-        BigInteger encryptedY = rsa.sign(ecePublicKey.getY());
-        signedECEPublicKey = new Point(encryptedX, encryptedY);
+        signedPublicParams = rsa.sign(EllipticCurveEncryption.concatPublicParams(publicParams));
     }
 
-    public Point getSharedKey() throws Exception {
-        BigInteger psx = participantSignedECEPublicKey.getX();
-        BigInteger psy = participantSignedECEPublicKey.getY();
+    public Point createSharedKey() throws Exception {
 
-        BigInteger px = participantECEPublicKey.getX();
-        BigInteger py = participantECEPublicKey.getY();
-
-        // todo implement checkSignature with point
         RSA rsa = new RSA();
         rsa.setPublicKey(participantRSAPublicKey);
-        boolean isSignatureValid = rsa.checkSignature(px, psx) && rsa.checkSignature(py, psy);
+
+        BigInteger participantConcatPublicParams = EllipticCurveEncryption.concatPublicParams(participantPublicParams);
+        boolean isSignatureValid = rsa.checkSignature(participantConcatPublicParams, participantSignedPublicParams);
+
         if (!isSignatureValid) {
             throw new Exception("Participant ECE public key not valid! Signature verification failed :(");
         }
 
-        this.sharedKey = ellipticCurveEncryption.doubleAndAdd(ecePrivateKey, participantECEPublicKey);
+        this.sharedKey = ellipticCurveEncryption.doubleAndAdd(ecePrivateKey, participantPublicParams.getPublicKey());
 
         return sharedKey;
     }

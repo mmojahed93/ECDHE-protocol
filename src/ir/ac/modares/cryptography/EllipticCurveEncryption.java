@@ -12,7 +12,7 @@ import java.util.Random;
  * on 6/7/19.
  */
 
-public class EllipticCurveEncryption {
+public class EllipticCurveEncryption implements Encryption {
 
     public static class PublicParams {
         private Point g;
@@ -175,6 +175,42 @@ public class EllipticCurveEncryption {
         BigInteger y3 = point1.getX().subtract(x3).multiply(s).subtract(point1.getY()).mod(this.mod);
 
         return new Point(x3, y3);
+    }
+
+
+    @Override
+    public BigInteger encrypt(BigInteger msg) {
+        return null;
+    }
+
+    @Override
+    public BigInteger decrypt(BigInteger encryptedMsg) {
+        return null;
+    }
+
+    @Override
+    public BigInteger sign(BigInteger msg) {
+        return null;
+    }
+
+    @Override
+    public BigInteger validateSignature(BigInteger encryptedMsg) {
+        return null;
+    }
+
+    @Override
+    public boolean checkEncryption(BigInteger msg, BigInteger encryptedMsg) {
+        return false;
+    }
+
+    @Override
+    public boolean checkSignature(BigInteger msg, BigInteger encryptedMsg) {
+        return false;
+    }
+
+    @Override
+    public BigInteger hash(BigInteger msg) {
+        return null;
     }
 
 }

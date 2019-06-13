@@ -12,6 +12,7 @@ public class DHE {
     private BigInteger ecePrivateKey;
     private Point ecePublicKey;
 
+    private EllipticCurveEncryption ellipticCurveEncryption;
     private BigInteger rsaPrivateKey;
     private RSA.RSAPublicKey rsaPublicKey;
 
@@ -55,7 +56,7 @@ public class DHE {
     }
 
     public void generateKeys() {
-        EllipticCurveEncryption ellipticCurveEncryption = new EllipticCurveEncryption();
+        ellipticCurveEncryption = new EllipticCurveEncryption();
         ellipticCurveEncryption.generateKeys();
         ecePrivateKey = ellipticCurveEncryption.getPrivateKey();
         ecePublicKey = ellipticCurveEncryption.getPublicKey();
@@ -77,6 +78,7 @@ public class DHE {
         BigInteger px = participantECEPublicKey.getX();
         BigInteger py = participantECEPublicKey.getY();
 
+        // todo implement checkSignature with point
         RSA rsa = new RSA();
         rsa.setPublicKey(participantRSAPublicKey);
         boolean isSignatureValid = rsa.checkSignature(px, psx) && rsa.checkSignature(py, psy);
@@ -84,9 +86,7 @@ public class DHE {
             throw new Exception("Participant ECE public key not valid! Signature verification failed :(");
         }
 
-        BigInteger sharedKeyX = ecePrivateKey.multiply(px);
-        BigInteger sharedKeyY = ecePrivateKey.multiply(py);
-        this.sharedKey = new Point(sharedKeyX, sharedKeyY);
+        this.sharedKey = ellipticCurveEncryption.doubleAndAdd(ecePrivateKey, participantECEPublicKey);
 
         return sharedKey;
     }

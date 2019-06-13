@@ -28,6 +28,63 @@ public class Main {
 
     }
 
+    private static void testRSA() {
+        int count = 0;
+        for (int i = 0; i < 100; i++) {
+            RSA rsa = new RSA(1024);
+            rsa.generateKeys();
+            BigInteger msg = BigInteger.valueOf(new Random().nextInt());
+            BigInteger encryptedMessage = rsa.encrypt(msg);
+            BigInteger decryptedMessage = rsa.decrypt(encryptedMessage);
+
+            boolean check = rsa.checkEncryption(msg, encryptedMessage);
+            if (!check) {
+                System.out.println("[testRSA] RSA encryption/decryption FAILED!");
+                System.out.println("[testRSA] encryptedMessage: " + encryptedMessage);
+                System.out.println("[testRSA] decryptedMessage: " + decryptedMessage);
+                count++;
+                System.out.println("I: " + i);
+            }
+        }
+        System.out.println("[testRSA] Count of failure: " + count);
+    }
+
+//    // extended Euclidean Algorithm
+//    public static int gcdExtended(int a, int b, int x, int y) {
+//        // Base Case
+//        if (a == 0) {
+//            x = 0;
+//            y = 1;
+//            return b;
+//        }
+//
+//        int x1 = 1, y1 = 1; // To store results of recursive call
+//        int gcd = gcdExtended(b % a, a, x1, y1);
+//
+//        // Update x and y using results of recursive
+//        // call
+//        x = y1 - (b / a) * x1;
+//        y = x1;
+//
+//        return gcd;
+//    }
+
+//    public static BigInteger gcdExtended() {
+//        BigInteger nextR;
+//        BigInteger prevPrevR = a;
+//        BigInteger prevR = b;
+//
+//        do {
+//            nextR = prevPrevR.mod(prevR);
+//            BigInteger quotient = prevPrevR.divide(prevR);  // not used in the standard algorithm
+//            prevPrevR = prevR;
+//            prevR = nextR;
+//        }
+//        while (nextR.compareTo(BigInteger.ZERO) != 0);
+//
+//        return null;
+//    }
+
     private static void testDHE() {
         long startTime = System.currentTimeMillis();
         System.out.println("[testDHE] Start at: " + startTime);
@@ -92,24 +149,4 @@ public class Main {
 //
 //    }
 
-    private static void testRSA() {
-        int count = 0;
-        for (int i = 0; i < 100; i++) {
-            RSA rsa = new RSA(1024);
-            rsa.generateKeys();
-            BigInteger msg = BigInteger.valueOf(new Random().nextInt());
-            BigInteger encryptedMessage = rsa.encrypt(msg);
-            BigInteger decryptedMessage = rsa.decrypt(encryptedMessage);
-
-            boolean check = rsa.checkEncryption(msg, encryptedMessage);
-            if (!check) {
-                System.out.println("[testRSA] RSA encryption/decryption FAILED!");
-                System.out.println("[testRSA] encryptedMessage: " + encryptedMessage);
-                System.out.println("[testRSA] decryptedMessage: " + decryptedMessage);
-                count++;
-                System.out.println("I: " + i);
-            }
-        }
-        System.out.println("[testRSA] Count of failure: " + count);
-    }
 }

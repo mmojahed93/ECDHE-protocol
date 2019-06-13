@@ -9,6 +9,36 @@ import java.util.Random;
 
 public class EllipticCurveEncryption {
 
+    public static class PublicParams {
+        private Point g;
+        private BigInteger mod;
+        private Point publicKey;
+        private BigInteger a;
+
+        public PublicParams(Point g, BigInteger mod, Point publicKey, BigInteger a) {
+            this.g = g;
+            this.mod = mod;
+            this.publicKey = publicKey;
+            this.a = a;
+        }
+
+        public Point getG() {
+            return g;
+        }
+
+        public BigInteger getMod() {
+            return mod;
+        }
+
+        public Point getPublicKey() {
+            return publicKey;
+        }
+
+        public BigInteger getA() {
+            return a;
+        }
+    }
+
 //    int b = 0x64210519e59c80e70fa7e9ab72243049feb8deecc146b9b1;
 //    int gx = 0x188da80eb03090f67cbf20eb43a18800f4ff0afd82ff1012;
 //    int gy = 0x07192b95ffc8da78631011ed6b24cdd573f977a11e794811;

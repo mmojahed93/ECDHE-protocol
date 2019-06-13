@@ -39,7 +39,7 @@ public class Point {
         return this.x.equals(point.getX()) && this.y.equals(point.getY());
     }
 
-    public boolean isNeutral(){
-        return this.getX().equals(BigInteger.ZERO) && this.getY().equals(BigInteger.ZERO);
+    public boolean isNeutral() {
+        return this.getX() == null && this.getY() == null;
     }
 }

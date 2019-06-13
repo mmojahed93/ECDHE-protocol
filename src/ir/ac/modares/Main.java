@@ -16,31 +16,17 @@ public class Main {
     }
 
     private static void testDHE() {
+        long startTime = System.currentTimeMillis();
+        System.out.println("[testDHE] Start at: " + startTime);
+
         DHE saberDHE = new DHE();
         saberDHE.generateKeys();
 
         DHE mohammadDHE = new DHE();
         mohammadDHE.generateKeys();
 
-        saberDHE.setParticipantRSAPublicKey(mohammadDHE.getRsaPublicKey());
-        saberDHE.setParticipantSignedECPublicKey(mohammadDHE.getSignedECEPublicKey());
-        saberDHE.setParticipantECEPublicKey(mohammadDHE.getEcePublicKey());
-        Point saberSharedKey = null;
-        try {
-            saberSharedKey = saberDHE.getSharedKey();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        mohammadDHE.setParticipantRSAPublicKey(saberDHE.getRsaPublicKey());
-        mohammadDHE.setParticipantSignedECPublicKey(saberDHE.getSignedECEPublicKey());
-        mohammadDHE.setParticipantECEPublicKey(saberDHE.getEcePublicKey());
-        Point mohammadSharedKey = null;
-        try {
-            mohammadSharedKey = mohammadDHE.getSharedKey();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Point saberSharedKey = createUserSharedKey(saberDHE, mohammadDHE);
+        Point mohammadSharedKey = createUserSharedKey(mohammadDHE, saberDHE);
 
         if (saberSharedKey != null && mohammadSharedKey != null) {
             System.out.println("saberSharedKeyX: " + saberSharedKey.getX() + " saberSharedKeyY: " + saberSharedKey.getY());
@@ -49,6 +35,25 @@ public class Main {
         } else {
             System.out.println("Generate shared key failed :(");
         }
+
+        long endTime = System.currentTimeMillis();
+        long duration = endTime - startTime;
+        System.out.println("[testDHE] End at: " + endTime);
+        System.out.println("[testDHE] Duration: " + duration + "'ms " + duration / 1000 + "'s");
+    }
+
+    private static Point createUserSharedKey(DHE userDHE, DHE participantDHE) {
+        userDHE.setParticipantRSAPublicKey(participantDHE.getRsaPublicKey());
+        userDHE.setParticipantSignedPublicParams(participantDHE.getSignedPublicParams());
+        userDHE.setParticipantPublicParams(participantDHE.getPublicParams());
+        Point sharedKey = null;
+        try {
+            sharedKey = userDHE.createSharedKey();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return sharedKey;
     }
 
 //    private static void checkSlideCase() {

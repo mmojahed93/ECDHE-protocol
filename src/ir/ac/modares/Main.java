@@ -36,16 +36,16 @@ public class Main {
 
         if (saberSharedKey != null && mohammadSharedKey != null) {
             if (saberSharedKey.equals(mohammadSharedKey)) {
-                System.out.println("DHE shared key generated successfully :)");
-                System.out.println("SharedKeyX: " + mohammadSharedKey.getX() + " SharedKeyY: " + mohammadSharedKey.getY());
+                System.out.println("[testDHE] ********** DHE shared key generated successfully :) **********");
+                System.out.println("[testDHE] SharedKeyX: " + mohammadSharedKey.getX() + " SharedKeyY: " + mohammadSharedKey.getY());
 
             } else {
-                System.out.println("Oops, DHE shared key generation FAILED :(");
+                System.out.println("[testDHE] Oops, DHE shared key generation FAILED :(");
 
             }
 
         } else {
-            System.out.println("Something went wrong, DHE shared key generation FAILED :(");
+            System.out.println("[testDHE] Something went wrong, DHE shared key generation FAILED :(");
         }
 
         long endTime = System.currentTimeMillis();

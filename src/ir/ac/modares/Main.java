@@ -11,6 +11,12 @@ public class Main {
     public static void main(String[] args) {
 
         // todo add jUnit test
+
+        ////////////////////////
+        // TEST RSA
+        ////////////////////////
+//        testRSA();
+
         testDHE();
 
     }
@@ -29,11 +35,17 @@ public class Main {
         Point mohammadSharedKey = createUserSharedKey(mohammadDHE, saberDHE);
 
         if (saberSharedKey != null && mohammadSharedKey != null) {
-            System.out.println("saberSharedKeyX: " + saberSharedKey.getX() + " saberSharedKeyY: " + saberSharedKey.getY());
-            System.out.println("mohammadSharedKeyX: " + mohammadSharedKey.getX() + " mohammadSharedKeyY: " + mohammadSharedKey.getY());
-            System.out.println("equals: " + saberSharedKey.equals(mohammadSharedKey));
+            if (saberSharedKey.equals(mohammadSharedKey)) {
+                System.out.println("DHE shared key generated successfully :)");
+                System.out.println("SharedKeyX: " + mohammadSharedKey.getX() + " SharedKeyY: " + mohammadSharedKey.getY());
+
+            } else {
+                System.out.println("Oops, DHE shared key generation FAILED :(");
+
+            }
+
         } else {
-            System.out.println("Generate shared key failed :(");
+            System.out.println("Something went wrong, DHE shared key generation FAILED :(");
         }
 
         long endTime = System.currentTimeMillis();

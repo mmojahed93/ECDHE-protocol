@@ -87,7 +87,6 @@ public class EllipticCurveEncryption {
     }
 
     private Point addPoints(Point point1, Point point2) {
-        // TODO check is ok?
         // Handle Neutral points
         if (point1.isNeutral()) {
             return point2;

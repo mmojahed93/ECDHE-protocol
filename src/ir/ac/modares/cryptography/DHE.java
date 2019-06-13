@@ -1,4 +1,6 @@
-package ir.ac.modares;
+package ir.ac.modares.cryptography;
+
+import ir.ac.modares.model.Point;
 
 import java.math.BigInteger;
 

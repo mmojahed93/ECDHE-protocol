@@ -1,4 +1,4 @@
-package ir.ac.modares;
+package ir.ac.modares.model;
 
 import java.math.BigInteger;
 

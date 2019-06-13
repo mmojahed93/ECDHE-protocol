@@ -80,17 +80,17 @@ public class Main {
             rsa.generateKeys();
             BigInteger msg = BigInteger.valueOf(new Random().nextInt());
             BigInteger encryptedMessage = rsa.encrypt(msg);
-//            BigInteger decryptedMessage = rsa.decrypt(encryptedMessage);
+            BigInteger decryptedMessage = rsa.decrypt(encryptedMessage);
 
             boolean check = rsa.checkEncryption(msg, encryptedMessage);
             if (!check) {
-//                System.out.println("encryptedMessage: " + encryptedMessage);
-//                System.out.println("decryptedMessage: " + decryptedMessage);
-//                System.out.println("Checked: " + check);
+                System.out.println("[testRSA] RSA encryption/decryption FAILED!");
+                System.out.println("[testRSA] encryptedMessage: " + encryptedMessage);
+                System.out.println("[testRSA] decryptedMessage: " + decryptedMessage);
                 count++;
                 System.out.println("I: " + i);
             }
         }
-        System.out.println("count: " + count);
+        System.out.println("[testRSA] Count of failure: " + count);
     }
 }

@@ -102,8 +102,9 @@ public class EllipticCurveEncryption implements Encryption {
     }
 
     private void generatePrivateKey() {
-        BigInteger upperLimit = r.subtract(BigInteger.ONE); // a, b should be in {2, 3, ..., #Ep-1} (#Ep=r)
-        this.privateKey = generateRandomNumber(BigInteger.ONE, upperLimit);
+        BigInteger upperLimit = r.subtract(BigInteger.ONE);
+        BigInteger two = BigInteger.valueOf(2);
+        this.privateKey = generateRandomNumber(two, upperLimit); // a, b should be in {2, 3, ..., #Ep-1} (#Ep=r)
     }
 
     private void generatePublicKey() {
@@ -125,8 +126,8 @@ public class EllipticCurveEncryption implements Encryption {
         BigInteger randomNumber;
         do {
             randomNumber = new BigInteger(upperLimit.bitLength(), randomSource);
-        } while (randomNumber.compareTo(lowerLimit) <= 0
-                || randomNumber.compareTo(upperLimit) >= 0); // continue until randomNumber is bigger than lowerLimit and smaller than upperLimit
+        } while (randomNumber.compareTo(lowerLimit) < 0
+                || randomNumber.compareTo(upperLimit) > 0); // continue until randomNumber is bigger than lowerLimit and smaller than upperLimit
 
         return randomNumber;
     }

@@ -79,6 +79,7 @@ public class EllipticCurveEncryption implements Encryption {
         return publicParams;
     }
 
+    @Override
     public void generateKeys() {
         generatePrivateKey();
         generatePublicKey();

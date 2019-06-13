@@ -77,6 +77,22 @@ public class EllipticCurveEncryption {
     public void generateKeys() {
         generatePrivateKey();
         generatePublicKey();
+        setPublicParams();
+    }
+
+    public static BigInteger concatPublicParams(PublicParams publicParams) {
+        if (publicParams.getPublicKey() == null || publicParams.getPublicKey().getX() == null || publicParams.getPublicKey().getY() == null) {
+            System.out.println("Public key not valid!");
+            return null;
+        }
+
+        String concatParams = String.valueOf(publicParams.getG().getX())
+                + publicParams.getG().getY()
+                + publicParams.getMod()
+                + publicParams.getPublicKey().getX()
+                + publicParams.getPublicKey().getY();
+
+        return new BigInteger(concatParams);
     }
 
     private void generatePrivateKey() {

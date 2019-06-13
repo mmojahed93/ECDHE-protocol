@@ -23,6 +23,7 @@ public class EllipticCurveEncryption {
     private final BigInteger r = new BigInteger("6277101735386680763835789423176059013767194773182842284081");
     private final BigInteger gx = new BigInteger("602046282375688656758213480587526111916698976636884684818");
     private final BigInteger gy = new BigInteger("174050332293622031404857552280219410364023488927386650641");
+    private final Point g = new Point(gx, gy);
 
     private BigInteger privateKey;
     private Point publicKey;
@@ -50,7 +51,7 @@ public class EllipticCurveEncryption {
 
     private void generatePublicKey() {
         BigInteger d = this.privateKey;
-        Point p = new Point(this.gx, this.gy);
+        Point p = this.g;
         this.publicKey = doubleAndAdd(d, p);
     }
 
@@ -69,12 +70,12 @@ public class EllipticCurveEncryption {
         return randomNumber;
     }
 
-    private Point doubleAndAdd(BigInteger d, Point p) {
+    public Point doubleAndAdd(BigInteger d, Point p) {
 
         String binaryD = d.toString(2);
-        Point q = new Point(BigInteger.ZERO, BigInteger.ZERO);
+        Point q = new Point(null, null);
 
-        for (int i = binaryD.length() - 1; i > -1; i--) {
+        for (int i = 0; i < binaryD.length(); i++) {
             int b = Integer.parseInt(String.valueOf(binaryD.charAt(i)));
             q = addPoints(q, q);
             if (b == 1) {
@@ -98,15 +99,15 @@ public class EllipticCurveEncryption {
         BigInteger s;
 
         if (point1.equals(point2)) {
-            BigInteger b1 = point1.getX().pow(2).multiply(BigInteger.valueOf(3)).add(this.a);
-            BigInteger b2 = point1.getY().multiply(BigInteger.valueOf(2));
-            BigInteger b3 = b1.divide(b2);
+            BigInteger b1 = point1.getX().pow(2).multiply(BigInteger.valueOf(3)).add(this.a).mod(this.p);
+            BigInteger b2 = point1.getY().multiply(BigInteger.valueOf(2)).mod(this.p);
+            BigInteger b3 = b1.multiply(b2.modPow(BigInteger.valueOf(-1), this.p));
             s = b3.mod(this.p);
 
         } else {
-            BigInteger b1 = point2.getY().subtract(point1.getY());
-            BigInteger b2 = point2.getX().subtract(point1.getX());
-            BigInteger b3 = b1.divide(b2);
+            BigInteger b1 = point2.getY().subtract(point1.getY()).mod(this.p);
+            BigInteger b2 = point2.getX().subtract(point1.getX()).mod(this.p);
+            BigInteger b3 = b1.multiply(b2.modPow(BigInteger.valueOf(-1), this.p));
             s = b3.mod(this.p);
 
         }

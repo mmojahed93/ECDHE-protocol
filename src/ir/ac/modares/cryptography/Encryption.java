@@ -3,8 +3,12 @@ package ir.ac.modares.cryptography;
 import java.math.BigInteger;
 
 /**
- * Created by noname on 6/10/19.
+ * Created by
+ * Hafmgh (hafmgh@riseup.net)
+ * Mohammad Mahdi Mojahed (m.mojahed@modares.ac.ir)
+ * on 6/7/19.
  */
+
 public interface Encryption {
 
     void generateKeys();

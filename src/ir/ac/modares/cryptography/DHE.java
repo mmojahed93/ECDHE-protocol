@@ -6,8 +6,12 @@ import java.math.BigInteger;
 
 
 /**
- * Created by Mohammad Mahdi Mojahed (m.mojahed@modares.ac.ir) on 6/10/19.
+ * Created by
+ * Hafmgh (hafmgh@riseup.net)
+ * Mohammad Mahdi Mojahed (m.mojahed@modares.ac.ir)
+ * on 6/7/19.
  */
+
 public class DHE {
 
     private EllipticCurveEncryption ellipticCurveEncryption;

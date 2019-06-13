@@ -1,5 +1,6 @@
 package ir.ac.modares.cryptography;
 
+import ir.ac.modares.model.HashAlgorithm;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.math.BigInteger;
@@ -29,6 +30,8 @@ public class RSA implements Encryption {
         }
     }
 
+    private HashAlgorithm hashAlgorithm = HashAlgorithm.SHA256;
+
     private int pqBitLength = 1024;
     private float publicKeyRatio = (float) 0.5;
 
@@ -42,9 +45,10 @@ public class RSA implements Encryption {
         this.pqBitLength = pqBitLength;
     }
 
-    public RSA(int pqBitLength, float publicKeyRatio) {
+    public RSA(int pqBitLength, float publicKeyRatio, HashAlgorithm hashAlgorithm) {
         this.pqBitLength = pqBitLength;
         this.publicKeyRatio = publicKeyRatio;
+        this.hashAlgorithm = hashAlgorithm;
     }
 
     public void setPrivateKey(BigInteger privateKey) {
@@ -55,6 +59,10 @@ public class RSA implements Encryption {
         this.publicKey = publicKey;
     }
 
+
+    public void setHashAlgorithm(HashAlgorithm hashAlgorithm) {
+        this.hashAlgorithm = hashAlgorithm;
+    }
 
     public BigInteger getPrivateKey() {
         return privateKey;
@@ -228,9 +236,32 @@ public class RSA implements Encryption {
 
     @Override
     public BigInteger hash(BigInteger msg) {
-        // TODO hash algorithm should be implemented? ask from Dr Abadi
-        // FIXME pass hash algorithm
-        byte[] hashMessageByteArr = DigestUtils.sha256(msg.toByteArray());
+        byte[] hashMessageByteArr = null;
+
+        if (hashAlgorithm == HashAlgorithm.MD5) {
+            hashMessageByteArr = DigestUtils.md5(msg.toByteArray());
+
+        } else if (hashAlgorithm == HashAlgorithm.SHA) {
+            hashMessageByteArr = DigestUtils.sha(msg.toByteArray());
+
+        } else if (hashAlgorithm == HashAlgorithm.SHA1) {
+            hashMessageByteArr = DigestUtils.sha1(msg.toByteArray());
+
+        } else if (hashAlgorithm == HashAlgorithm.SHA256) {
+            hashMessageByteArr = DigestUtils.sha256(msg.toByteArray());
+
+        } else if (hashAlgorithm == HashAlgorithm.SHA384) {
+            hashMessageByteArr = DigestUtils.sha384(msg.toByteArray());
+
+        } else if (hashAlgorithm == HashAlgorithm.SHA512) {
+            hashMessageByteArr = DigestUtils.sha512(msg.toByteArray());
+
+        }
+
+        if (hashMessageByteArr == null) {
+            return null;
+        }
+
         return new BigInteger(1, hashMessageByteArr);
     }
 }

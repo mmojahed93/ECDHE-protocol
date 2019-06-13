@@ -144,7 +144,7 @@ public class RSA implements Encryption {
             return false;
         }
 
-        // Check via BigInteger.isProbablePrime(certainty), probability of false positive is: (1 - 2^certainty)
+        // Check via BigInteger.isProbablePrime(certainty), probability of false positive is: (1 - 2^-certainty)
         if (!number.isProbablePrime(certainty)) {
             return false;
         }

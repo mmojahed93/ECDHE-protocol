@@ -57,6 +57,7 @@ public class EllipticCurveEncryption {
 
     private BigInteger privateKey;
     private Point publicKey;
+    private PublicParams publicParams;
 
     public EllipticCurveEncryption() {
     }
@@ -67,6 +68,10 @@ public class EllipticCurveEncryption {
 
     public Point getPublicKey() {
         return publicKey;
+    }
+
+    public PublicParams getPublicParams() {
+        return publicParams;
     }
 
     public void generateKeys() {
@@ -83,6 +88,10 @@ public class EllipticCurveEncryption {
         BigInteger d = this.privateKey;
         Point p = this.g;
         this.publicKey = doubleAndAdd(d, p);
+    }
+
+    private void setPublicParams() {
+        this.publicParams = new PublicParams(this.g, this.mod, this.publicKey, this.a);
     }
 
     private BigInteger generateRandomNumber(BigInteger upperLimit) {

@@ -26,6 +26,12 @@ public class Main {
 
         testDHE();
 
+//        BigInteger b1 = BigInteger.valueOf(20);
+//        BigInteger b2 = BigInteger.valueOf(3);
+////        System.out.println(b1.gcd(b2));
+//        System.out.println(b1.modPow(BigInteger.valueOf(-1), b2));
+//        System.out.println(gcdExtended(b1, b2));
+
     }
 
     private static void testRSA() {
@@ -69,21 +75,41 @@ public class Main {
 //        return gcd;
 //    }
 
-//    public static BigInteger gcdExtended() {
-//        BigInteger nextR;
-//        BigInteger prevPrevR = a;
-//        BigInteger prevR = b;
-//
-//        do {
+    public static BigInteger gcdExtended(BigInteger a, BigInteger b) {
+        BigInteger nextR;
+        BigInteger prevR = b;
+        BigInteger prevPrevR = a;
+
+        BigInteger nextS;
+        BigInteger prevS = BigInteger.ZERO;
+        BigInteger prevPrevS = BigInteger.ONE;
+
+
+        BigInteger nextT;
+        BigInteger prevT = BigInteger.ONE;
+        BigInteger prevPrevT = BigInteger.ZERO;
+
+
+        do {
+            BigInteger quotient = prevPrevR.divide(prevR);
 //            nextR = prevPrevR.mod(prevR);
-//            BigInteger quotient = prevPrevR.divide(prevR);  // not used in the standard algorithm
-//            prevPrevR = prevR;
-//            prevR = nextR;
-//        }
-//        while (nextR.compareTo(BigInteger.ZERO) != 0);
-//
-//        return null;
-//    }
+            nextR = prevPrevR.subtract(quotient.multiply(prevR));
+            prevPrevR = prevR;
+            prevR = nextR;
+
+            nextS = prevPrevS.subtract(quotient.multiply(prevS));
+            prevPrevS = prevS;
+            prevS = nextS;
+
+            nextT = prevPrevT.subtract(quotient.multiply(prevT));
+            prevPrevT = prevT;
+            prevT = nextT;
+        }
+        while (nextR.compareTo(BigInteger.ZERO) != 0);
+
+//        return prevPrevR;
+        return prevPrevS;
+    }
 
     private static void testDHE() {
         long startTime = System.currentTimeMillis();

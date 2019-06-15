@@ -1,2 +1,2 @@
 # ECDHE-protocol
-An implementation of ECDHE protocol from base without any  usage of encryption library
+An implementation of ECDHE protocol By Hafmgh (hafmgh@riseup.net), Mohammad Mahdi Mojahed (m.mojahed@modares.ac.ir)

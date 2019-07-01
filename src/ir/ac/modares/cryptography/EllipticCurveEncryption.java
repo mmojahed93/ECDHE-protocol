@@ -162,12 +162,24 @@ public class EllipticCurveEncryption implements Encryption {
         if (point1.equals(point2)) {
             BigInteger b1 = point1.getX().pow(2).multiply(BigInteger.valueOf(3)).add(this.a).mod(this.mod);
             BigInteger b2 = point1.getY().multiply(BigInteger.valueOf(2)).mod(this.mod);
+
+            // Check is divisor zero, if yes return neutral point
+            if (b2.equals(BigInteger.ZERO)) {
+                return new Point(null, null);
+            }
+
             BigInteger b3 = b1.multiply(b2.modPow(BigInteger.valueOf(-1), this.mod));
             s = b3.mod(this.mod);
 
         } else {
             BigInteger b1 = point2.getY().subtract(point1.getY()).mod(this.mod);
             BigInteger b2 = point2.getX().subtract(point1.getX()).mod(this.mod);
+
+            // Check is divisor zero, if yes return neutral point
+            if (b2.equals(BigInteger.ZERO)) {
+                return new Point(null, null);
+            }
+
             BigInteger b3 = b1.multiply(b2.modPow(BigInteger.valueOf(-1), this.mod));
             s = b3.mod(this.mod);
 
